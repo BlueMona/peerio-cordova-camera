@@ -414,6 +414,10 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
      * @param intent            An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
      */
     private void processResultFromCamera(int destType, Intent intent) throws IOException {
+        if(this.croppedUri == null && this.imageUri == null) {
+            throw new IOException("Something went wrong. We do not have the imageUri available");
+        }
+
         int rotate = 0;
 
         // Create an ExifHelper to save the exif data that is lost during compression
