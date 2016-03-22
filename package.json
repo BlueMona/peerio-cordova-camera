@@ -1,9 +1,9 @@
 {
-  "name": "cordova-plugin-camera",
-  "version": "2.1.1-dev",
+  "name": "com.peerio.cordova.plugin.camera",
+  "version": "2.1.2",
   "description": "Cordova Camera Plugin",
   "cordova": {
-    "id": "cordova-plugin-camera",
+    "id": "com.peerio.cordova.plugin.camera",
     "platforms": [
       "firefoxos",
       "android",
@@ -20,10 +20,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/apache/cordova-plugin-camera"
+    "url": "https://github.com/PeerioTechnologies/peerio-cordova-camera"
   },
   "keywords": [
     "cordova",
+    "peerio",
     "camera",
     "ecosystem:cordova",
     "cordova-firefoxos",
@@ -39,20 +40,14 @@
     "cordova-windows"
   ],
   "peerDependencies": {
-    "cordova-plugin-file": ">=2.0.0"
-  },
-  "scripts": {
-    "precommit": "npm run gen-docs && git add README.md",
-    "gen-docs": "jsdoc2md --template \"jsdoc2md/TEMPLATE.md\" \"www/**/*.js\" --plugin \"dmd-plugin-cordova-plugin\" > README.md",
-    "test": "npm run jshint",
-    "jshint": "node node_modules/jshint/bin/jshint www && node node_modules/jshint/bin/jshint src && node node_modules/jshint/bin/jshint tests"
+    "com.peerio.cordova.plugin.file": ">=2.0.0"
   },
   "author": "Apache Software Foundation",
-  "license": "Apache-2.0",
-  "devDependencies": {
-    "dmd-plugin-cordova-plugin": "^0.1.0",
-    "husky": "^0.10.1",
-    "jsdoc-to-markdown": "^1.2.0",
-    "jshint": "^2.6.0"
-  }
+  "contributors": [
+      {
+          "name": "Samvel Avanesov",
+          "email": "seavan@gmail.com"
+      }
+  ],
+  "license": "Apache-2.0"
 }
