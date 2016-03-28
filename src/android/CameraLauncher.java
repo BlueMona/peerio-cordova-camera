@@ -55,6 +55,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.content.pm.PackageManager;
@@ -86,6 +88,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     public static final int PERMISSION_DENIED_ERROR = 20;
     public static final int TAKE_PIC_SEC = 0;
     public static final int SAVE_TO_ALBUM_SEC = 1;
+    public static final int TAKE_PIC_SEC_API_23 = 2;
 
     private static final String LOG_TAG = "CameraLauncher";
 
@@ -168,6 +171,15 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                     this.callTakePicture(destType, encodingType);
                 }
                 else if ((this.srcType == PHOTOLIBRARY) || (this.srcType == SAVEDPHOTOALBUM)) {
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (ContextCompat.checkSelfPermission(cordova.getActivity(),
+                                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(cordova.getActivity(),
+                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                    TAKE_PIC_SEC_API_23);
+                            return false;
+                        }
+                    }
                     // Any options that edit the file require READ permissions in order to try and
                     // preserve the original exif data and filename in the modified file that is
                     // created
@@ -204,14 +216,15 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
         File cache = null;
 
         // SD Card Mounted
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            cache = cordova.getActivity().getExternalCacheDir();
-        }
+        //if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+        //    cache = cordova.getActivity().getExternalCacheDir();
+        //}
         // Use internal storage
-        else {
-            cache = cordova.getActivity().getFilesDir();
-        }
+        //else {
+        //    cache = cordova.getActivity().getFilesDir();
+        //}
 
+        cache = cordova.getActivity().getExternalCacheDir();
         // Create the cache directory if it doesn't exist
         cache.mkdirs();
         return cache.getAbsolutePath();
@@ -232,6 +245,17 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
      * @param returnType        Set the type of image to return.
      */
     public void callTakePicture(int returnType, int encodingType) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if ( (ContextCompat.checkSelfPermission(cordova.getActivity(),
+                    Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+                    || (ContextCompat.checkSelfPermission(cordova.getActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                ActivityCompat.requestPermissions(cordova.getActivity(),
+                        new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE},
+                        TAKE_PIC_SEC_API_23);
+                return;
+            }
+        }
         if ( (Build.VERSION.SDK_INT >= 19) || PermissionHelper.hasPermission(this, permissions[0])) {
             takePicture(returnType, encodingType);
         } else {
