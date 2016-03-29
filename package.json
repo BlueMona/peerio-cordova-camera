@@ -1,6 +1,6 @@
 {
   "name": "com.peerio.cordova.plugin.camera",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Cordova Camera Plugin",
   "cordova": {
     "id": "com.peerio.cordova.plugin.camera",
